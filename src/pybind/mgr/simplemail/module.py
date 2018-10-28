@@ -1,5 +1,6 @@
 """
 simple email module to send a preset email message from localhost
+modification info at doc/mgr/simplemail.rst
 """
 
 from mgr_module import MgrModule
@@ -52,4 +53,3 @@ class Email(MgrModule):
 
         finally:
             server.quit()
-
