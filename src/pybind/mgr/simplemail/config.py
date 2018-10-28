@@ -8,5 +8,4 @@ eg. recipient_email = 'address1@example.com, address2@example.com'
 
 recipient_email = ''
 
-
 send_from = 'noreply@localhost'

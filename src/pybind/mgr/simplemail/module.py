@@ -52,3 +52,4 @@ class Email(MgrModule):
 
         finally:
             server.quit()
+
