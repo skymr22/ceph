@@ -42,14 +42,14 @@ class Email(MgrModule):
             server.sendmail(from_addr, to_addr_unpacked, msg.as_string())
             return 0, '', 'Message sent successfully'
 
-        except smtplib.SMTPRecipientsRefused:
-            return -errno.EINVAL, "", "Recipient address was refused"
-        except smtplib.SMTPHeloError:
-            return -errno.EINVAL, "", "Remote server responded incorrectly"
-        except smtplib.SMTPSenderRefused:
-            return -errno.EINVAL, "", "From address rejected by server"
-        except smtplib.SMTPDataError:
-            return -errno.EINVAL, "", "An unknown data error occurred"
+        except smtplib.SMTPRecipientsRefused as e:
+            return e.errno, "", "Recipient refused"
+        except smtplib.SMTPHeloError as e:
+            return e.errno, "", "Remote server responded incorrectly"
+        except smtplib.SMTPSenderRefused as e:
+            return e.errno, "", "From address rejected by server"
+        except smtplib.SMTPDataError as e:
+            return e.errno, "", "An unknown data error occurred"
 
         finally:
             server.quit()
