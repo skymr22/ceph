@@ -51,7 +51,7 @@ Commands
 Modification
 ------------
 
-The module can be modified to send from a different server other than localhost among others. 
+The module can be modified to send from a different server other than localhost as well replacing the preset message with something more dynamic. 
 This can be done as per the smtplib documentation_.
 .. _documentation: https://docs.python.org/2/library/smtplib.html
 
