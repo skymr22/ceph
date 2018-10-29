@@ -3,12 +3,12 @@ simple email module to send a preset email message from localhost
 modification info at doc/mgr/simplemail.rst
 """
 
-from mgr_module import MgrModule
-from email.mime.text import MIMEText
 import smtplib
-import email.utils
 import errno
-from config import recipient_email, send_from
+import email.utils
+from email.mime.text import MIMEText
+from mgr_module import MgrModule
+from simplemail.config import recipient_email, send_from
 
 
 class Email(MgrModule):
@@ -42,14 +42,14 @@ class Email(MgrModule):
             server.sendmail(from_addr, to_addr_unpacked, msg.as_string())
             return 0, '', 'Message sent successfully'
 
-        except smtplib.SMTPRecipientsRefused as e:
-            return e.errno, "", "Recipient refused"
-        except smtplib.SMTPHeloError as e:
-            return e.errno, "", "Remote server responded incorrectly"
-        except smtplib.SMTPSenderRefused as e:
-            return e.errno, "", "From address rejected by server"
-        except smtplib.SMTPDataError as e:
-            return e.errno, "", "An unknown data error occurred"
+        except smtplib.SMTPRecipientsRefused:
+            return -errno.EINVAL, "", "Recipient address was refused"
+        except smtplib.SMTPHeloError:
+            return -errno.EINVAL, "", "Remote server responded incorrectly"
+        except smtplib.SMTPSenderRefused:
+            return -errno.EINVAL, "", "From address rejected by server"
+        except smtplib.SMTPDataError:
+            return -errno.EINVAL, "", "An unknown data error occurred"
 
         finally:
             server.quit()
