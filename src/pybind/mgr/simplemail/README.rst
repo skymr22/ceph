@@ -1,7 +1,7 @@
 Simplemail
 ==========
 
-Simplemail is a module to send a preset email message from localhost
+Simplemail is a module to send an email message from localhost
 
 
 Enabling
