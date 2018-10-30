@@ -1,10 +1,11 @@
 """
-simple email module to send a preset email message from localhost
+simple email module to send an email message from localhost
 modification info at doc/mgr/simplemail.rst
 """
 
 import smtplib
 import errno
+import json
 import email.utils
 from email.mime.text import MIMEText
 from mgr_module import MgrModule
@@ -16,21 +17,28 @@ class Email(MgrModule):
         {
             "cmd": "simplemail "
                    "name=recipient,type=CephString,req=false",
-            "desc": "Sends preset email message",
+            "desc": "Sends email message",
             "perm": "r"
         },
     ]
 
     def handle_command(self, inbuf, cmd):
+        try:
+            h = self.get('health')
+            health_status = str(json.loads(h['json'])['status'])
+        except:
+            return -errno.EINVAL, "", "Health check returned an error"
+
         sender = send_from
         if 'recipient' in cmd:
             send_to = cmd['recipient']
         else:
             send_to = recipient_email
-        return self.send_email(send_to, sender)
 
-    def send_email(self, to_addr, from_addr):
-        msg = MIMEText("Don't worry, it's Ceph to start!")
+        return self.send_email(send_to, sender, health_status)
+
+    def send_email(self, to_addr, from_addr, messg):
+        msg = MIMEText("Ceph Health Alert = " + messg)
         msg['To'] = to_addr
         msg['From'] = email.utils.formataddr(('Ceph Hello', from_addr))
         msg['Subject'] = 'Ceph Hello test message'
